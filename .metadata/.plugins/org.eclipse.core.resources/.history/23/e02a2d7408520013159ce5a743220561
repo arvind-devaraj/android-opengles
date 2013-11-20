@@ -1,0 +1,60 @@
+package com.example.graphics1;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
+public class Square {
+	
+	private FloatBuffer vertexBuffer;	// buffer holding the vertices
+	
+	private FloatBuffer textureBuffer;	// buffer holding the texture coordinates
+	private float texture[] = {    		
+			// Mapping coordinates for the vertices
+			0.0f, 1.0f,		// top left		(V2)
+			0.0f, 0.0f,		// bottom left	(V1)
+			1.0f, 1.0f,		// top right	(V4)
+			1.0f, 0.0f		// bottom right	(V3)
+	};
+
+	private float vertices[] = {
+			-.5f, -.5f,  0.0f,		// V1 - bottom left
+			-.5f,  .5f,  0.0f,		// V2 - top left
+			 .5f, -.5f,  0.0f,		// V3 - bottom right
+			 .5f,  .5f,  0.0f			// V4 - top right
+	};
+	public Square() {
+		// a float has 4 bytes so we allocate for each coordinate 4 bytes
+		ByteBuffer byteBuffer = ByteBuffer.allocateDirect(vertices.length * 4);
+		byteBuffer.order(ByteOrder.nativeOrder());
+		
+		vertexBuffer = byteBuffer.asFloatBuffer();
+		vertexBuffer.put(vertices);
+		vertexBuffer.position(0);
+		
+		byteBuffer = ByteBuffer.allocateDirect(texture.length * 4);
+		byteBuffer.order(ByteOrder.nativeOrder());
+		textureBuffer = byteBuffer.asFloatBuffer();
+		textureBuffer.put(texture);
+		textureBuffer.position(0);
+	}
+
+	/** The draw method for the square with the GL context */
+	public void draw(GL10 gl) {
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		
+		// set the colour for the square
+		gl.glColor4f(0.0f, 1.0f, 0.0f, 0.5f);
+		
+		// Point to our vertex buffer
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
+
+		// Draw the vertices as triangle strip
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, vertices.length / 3);
+		
+		//Disable the client state before leaving
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+	}
+}
