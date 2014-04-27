@@ -6,6 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
+/* Arvind */
 public class GLRenderer implements GLSurfaceView .Renderer {
 	
 	private final Context context;
